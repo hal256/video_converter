@@ -51,7 +51,7 @@ func Convert(mode string, v Video, distPath string) string {
 	}
 	return "ok"
 }
-func getCodec(videoPath string) string{
+func getCodec(videoPath string) (string, error) {
 	args := []string{
 		"-i", videoPath,
 	}
@@ -64,8 +64,14 @@ func getCodec(videoPath string) string{
 	if err != nil {
 		log.Infof("Error ffmpeg", err)
 		//log.Infof(string(output))
+		return "", nil
+	}else{
+		if len(result) > 0{
+			return result[0], nil
+		}else{
+			return "", nil
+		}
 	}
-	return result[0]
 }
 
 func convertHls(v Video, distPath string) Video{
@@ -123,10 +129,15 @@ func ConvertAllFIle(basePath string, distPath string) {
 			continue
 		}
 		videoPath := filepath.Base(f.Name())
+		codec, err :=getCodec(basePath + videoPath)
+		if err != nil {
+			log.Info("Cant convert", err)
+			continue
+		}
 		video := Video{
 			title: f.Name(),
 			size:  f.Size(),
-			codec: getCodec(basePath + videoPath),
+			codec: codec,
 			path:  basePath + videoPath,
 		}
 		videos = append(videos, video)
