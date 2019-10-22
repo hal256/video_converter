@@ -15,7 +15,7 @@ var (
 
 func init() {
 	convertCmd.Flags().StringVarP(&o.targetPath, "target", "t", "./targetPath/", "for target")
-	convertCmd.Flags().StringVarP(&o.distPath, "dist", "d", "./distPath", "for dist ")
+	convertCmd.Flags().StringVarP(&o.distPath, "dist", "d", "./distPath/", "for dist ")
 	rootCmd.AddCommand(convertCmd)
 }
 

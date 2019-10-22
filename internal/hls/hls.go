@@ -25,7 +25,7 @@ type Video struct {
 }
 
 //
-func Convert(mode string, v Video, distPath string) string {
+func Convert(mode string, v Video, distPath string) error {
 	args := make([]string, 1)
 	if mode == "convert_h264" {
 		args = []string{
@@ -43,13 +43,13 @@ func Convert(mode string, v Video, distPath string) string {
 		cmd := exec.Command(FFMPEGPath, args...)
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			log.Infof(string(output))
+			log.Infof("convert error ",string(output))
 			//log.Infof("Error ffmpeg", err)
-			return "error"
+			return err
 		}
 
 	}
-	return "ok"
+	return nil
 }
 func getCodec(videoPath string) (string, error) {
 	args := []string{
@@ -60,7 +60,6 @@ func getCodec(videoPath string) (string, error) {
 	r := regexp.MustCompile(`(Video:.+)`)
 	output, err := cmd.CombinedOutput()
 	result := r.FindAllString(string(output), -1)
-	log.Println(string(output))
 	if err != nil {
 		log.Infof("Error ffmpeg", err)
 		//log.Infof(string(output))
@@ -79,13 +78,13 @@ func convertHls(v Video, distPath string) Video{
 		log.Infof("skip %v", v.title)
 		return v
 	}
-	_ = os.Mkdir(distPath+v.title, 0777)
-	//存在したらスキップ
 
 	if strings.Contains(v.codec, "h264"){
+		_ = os.Mkdir(distPath+v.title, 0777)
 		log.Infof("convert h264", v.title)
-		v.status = Convert("convert_h264", v, distPath)
-		if v.status == "error"{
+		err := Convert("convert_h264", v, distPath)
+		if err != nil{
+			log.Infof("convert err ", err)
 			_ = syscall.Rmdir(distPath + v.title)
 		}
 	}
