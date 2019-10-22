@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/hal256/VideoConverter/internal/hls"
+	"github.com/hal256/video_converter/internal/hls"
 	"github.com/spf13/cobra"
 )
 

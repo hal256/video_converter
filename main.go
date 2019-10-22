@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hal256/VideoConverter/cmd"
+	"github.com/hal256/video_converter/cmd"
 )
 
 func main() {
