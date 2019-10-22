@@ -9,5 +9,5 @@ RUN cp ffprobe /go/bin
 WORKDIR /go/src/app
 COPY . .
 RUN go get
-RUN go build
-CMD ["sh"]
+RUN go build -o /go/bin/conveter
+CMD ["conveter", "convert", "--target=./targetPath/", "--dist=./distPath/"]
