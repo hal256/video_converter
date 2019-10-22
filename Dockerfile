@@ -6,8 +6,8 @@ RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.ta
 WORKDIR /go/bin/ffmpeg-4.2.1-i686-static
 RUN cp ffmpeg /go/bin
 RUN cp ffprobe /go/bin
+WORKDIR /go/src/app
 COPY . .
 RUN go get
 RUN go build
-
 CMD ["sh"]

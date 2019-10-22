@@ -85,11 +85,17 @@ func convertHls(v Video, distPath string) Video{
 	}
 	return v
 }
-
+const (
+	logfile = "./logs/output.log"
+)
 
 
 func ConvertAllFIle(basePath string, distPath string) {
-	log.SetOutput(os.Stdout)
+	logfile, err := os.OpenFile(logfile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Info(err)
+	}
+	log.SetOutput(logfile)
 	// Find ffmpeg
 	ffmpeg, err := exec.LookPath("ffmpeg")
 	if err != nil {
@@ -113,6 +119,9 @@ func ConvertAllFIle(basePath string, distPath string) {
 	files, err :=ioutil.ReadDir(basePath)
 	videos := make([]Video,1)
 	for _, f := range files{
+		if f.Name() == ".gitkeep" {
+			continue
+		}
 		videoPath := filepath.Base(f.Name())
 		video := Video{
 			title: f.Name(),
